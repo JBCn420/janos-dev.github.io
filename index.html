@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="hu">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reels & Showcase Portfolio | Farm Empire Documentation</title>
+  <title>Reels & Showcase Portfolio | Technical Documentation</title>
   <style>
     :root {
       --bg-color: #0d0f12;
@@ -17,6 +17,7 @@
       --text-color: #f0f6fc;
       --text-muted: #8b949e;
       --border-color: rgba(255, 255, 255, 0.1);
+      --code-bg: #0d1117;
     }
 
     * {
@@ -76,7 +77,16 @@
       box-shadow: 0 6px 20px rgba(0, 198, 255, 0.5);
     }
 
-    /* Category Filter */
+    .btn-live {
+      background: var(--emerald-gradient);
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-live:hover {
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+    }
+
+    /* Category Filter System */
     .filter-container {
       display: flex;
       justify-content: center;
@@ -150,17 +160,28 @@
       padding: 20px;
     }
 
+    .tag-group {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
     .tag {
       display: inline-block;
-      font-size: 0.75rem;
+      font-size: 0.72rem;
       text-transform: uppercase;
       letter-spacing: 1px;
       color: var(--accent-color);
       background: rgba(0, 242, 254, 0.1);
-      padding: 4px 10px;
+      padding: 3px 8px;
       border-radius: 12px;
-      margin-bottom: 10px;
       font-weight: 600;
+    }
+
+    .tag-emerald {
+      color: var(--accent-emerald);
+      background: rgba(16, 185, 129, 0.1);
     }
 
     .card-title {
@@ -198,7 +219,7 @@
       background: rgba(255, 255, 255, 0.05);
     }
 
-    /* Modal Details */
+    /* Modal Styling */
     .modal {
       display: none;
       position: fixed;
@@ -219,7 +240,7 @@
       background: var(--modal-bg);
       border: 1px solid var(--border-color);
       border-radius: 20px;
-      max-width: 850px;
+      max-width: 950px;
       width: 100%;
       max-height: 90vh;
       overflow-y: auto;
@@ -242,11 +263,10 @@
       color: var(--text-color);
     }
 
-    /* Documentation Specific Styles inside Modal */
     .doc-section {
-      margin-bottom: 28px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      padding-bottom: 20px;
+      margin-bottom: 35px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 25px;
     }
 
     .doc-section:last-child {
@@ -254,7 +274,7 @@
     }
 
     .doc-title {
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       color: var(--accent-color);
       margin-bottom: 12px;
       display: flex;
@@ -262,39 +282,36 @@
       gap: 8px;
     }
 
-    .doc-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 15px;
-      margin-top: 12px;
-    }
-
-    .doc-box {
-      background: rgba(0, 0, 0, 0.3);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 14px;
-      border-radius: 12px;
-    }
-
-    .doc-box h4 {
-      color: #fff;
-      font-size: 0.95rem;
-      margin-bottom: 6px;
-    }
-
-    .doc-box p {
+    .doc-intro {
       color: var(--text-muted);
-      font-size: 0.85rem;
+      font-size: 0.95rem;
+      margin-bottom: 15px;
     }
 
-    code {
-      background: rgba(0, 242, 254, 0.1);
-      color: var(--accent-color);
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-family: Consolas, monospace;
-      font-size: 0.88em;
+    .code-block {
+      background: var(--code-bg);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 16px;
+      font-family: 'Fira Code', Consolas, Monaco, 'Andale Mono', monospace;
+      font-size: 0.85rem;
+      color: #e6edf3;
+      overflow-x: auto;
+      line-height: 1.5;
+      margin: 15px 0;
     }
+
+    .code-block pre {
+      margin: 0;
+      white-space: pre;
+    }
+
+    .keyword { color: #ff7b72; }
+    .function { color: #d2a8ff; }
+    .string { color: #a5d6ff; }
+    .comment { color: #8b949e; font-style: italic; }
+    .number { color: #79c0ff; }
+    .type { color: #ffa657; }
 
     footer {
       text-align: center;
@@ -308,7 +325,7 @@
 
   <header>
     <h1>Game Developer Portfolio</h1>
-    <p class="subtitle">React, TypeScript & Unity Game Developer Portfolio</p>
+    <p class="subtitle">React, TypeScript & Web Game Engine Architecture</p>
     <a href="resume.pdf" class="btn" target="_blank">Download Resume (CV)</a>
   </header>
 
@@ -316,6 +333,7 @@
     <!-- Category Filters -->
     <div class="filter-container">
       <button class="filter-btn active" onclick="filterCategory('all', event)">All Projects</button>
+      <button class="filter-btn" onclick="filterCategory('web-games', event)">Web & Playable Games</button>
       <button class="filter-btn" onclick="filterCategory('gameplay', event)">Gameplay & Simulation</button>
       <button class="filter-btn" onclick="filterCategory('showcase', event)">Visual & Tech Showcase</button>
     </div>
@@ -324,17 +342,20 @@
     <div class="projects-grid">
 
       <!-- Reel Card 1: FARM EMPIRE TYCOON -->
-      <div class="project-card" data-category="gameplay" onclick="openModal('modal1')">
+      <div class="project-card" data-category="web-games gameplay" onclick="openModal('modal1')">
         <div class="card-media">
           <img src="preview1.jpg" alt="Farm Empire Tycoon Gameplay">
         </div>
         <div class="card-content">
-          <span class="tag">Incremental Strategy / Web React</span>
+          <div class="tag-group">
+            <span class="tag tag-emerald">Playable Demo</span>
+            <span class="tag">Incremental Strategy</span>
+          </div>
           <h3 class="card-title">Farm Empire Tycoon</h3>
-          <p class="card-desc">Átfogó mezőgazdasági szimulátor élő piaci árfolyamokkal, gépkopási mechanikákkal és Supervisor automatizációval.</p>
+          <p class="card-desc">An advanced agricultural simulation engine built with React, TypeScript, state-machine fields, offline calculation, and wear physics.</p>
           <div class="card-actions">
-            <span class="btn-secondary">Részletes Dokumentáció</span>
-            <a href="https://github.com/YOUR_USERNAME/YOUR_REPO" target="_blank" class="btn-secondary" onclick="event.stopPropagation()">GitHub Repo</a>
+            <a href="https://world-of-farmers.netlify.app" target="_blank" class="btn btn-live" style="padding: 8px 18px; font-size: 0.85rem;" onclick="event.stopPropagation()">🌐 Play Game Live</a>
+            <span class="btn-secondary">Technical Breakdown</span>
           </div>
         </div>
       </div>
@@ -345,7 +366,9 @@
           <img src="preview2.jpg" alt="Environment Showcase">
         </div>
         <div class="card-content">
-          <span class="tag">Visual Reel</span>
+          <div class="tag-group">
+            <span class="tag">Visual Reel</span>
+          </div>
           <h3 class="card-title">Environment Showcase</h3>
           <p class="card-desc">Cinematic reel demonstrating lighting, shaders, and interactive environment elements.</p>
           <div class="card-actions">
@@ -358,84 +381,187 @@
     </div>
   </main>
 
-  <!-- MODAL 1: FARM EMPIRE TYCOON ÁTFOGÓ DOKUMENTÁCIÓ -->
+  <!-- MODAL 1: FARM EMPIRE TYCOON DETAILED TECHNICAL DOCUMENTATION -->
   <div id="modal1" class="modal" onclick="closeModal('modal1')">
     <div class="modal-content" onclick="event.stopPropagation()">
       <span class="close-modal" onclick="closeModal('modal1')">&times;</span>
-      <span class="tag">Műszaki & Játékmeneti Dokumentáció</span>
-      <h2 style="font-size: 1.8rem; margin-top: 5px;">Farm Empire Tycoon — Rendszerarchitektúra</h2>
-      <p style="color: var(--text-muted); margin: 10px 0 25px;">
-        A Farm Empire Tycoon egy React + TypeScript alapon épült, valós idejű inkrementális stratógiai játék, komplex háttérmotorral, offline haladással és Supabase felhőalapú ranglistával.
+      <div class="tag-group" style="margin-bottom: 12px;">
+        <span class="tag tag-emerald">Live at world-of-farmers.netlify.app</span>
+        <span class="tag">Architecture & Technical Deep Dive</span>
+      </div>
+      <h2 style="font-size: 2rem; margin-top: 5px;">Farm Empire Tycoon — Engine Documentation</h2>
+      <p style="color: var(--text-muted); margin: 10px 0 20px;">
+        A comprehensive overview of the core state management, real-time simulation loop, field state machine, machinery wear mathematics, and offline progression algorithms.
       </p>
 
-      <!-- Section 1: Tech Stack -->
-      <div class="doc-section">
-        <h3 class="doc-title">🛠️ Technológiai Stakk</h3>
-        <div class="doc-grid">
-          <div class="doc-box">
-            <h4>Frontend Core</h4>
-            <p>React 18+, TypeScript, Vite, Tailwind CSS v4, Framer Motion animációk.</p>
-          </div>
-          <div class="doc-box">
-            <h4>Állapotkezelés & Adatok</h4>
-            <p>React Context API + Reducer, <code>localStorage</code> automatikus szinkronizáció.</p>
-          </div>
-          <div class="doc-box">
-            <h4>Kereskedelem & Backend</h4>
-            <p>Supabase REST API (Leaderboard & Stats), Recharts élő árfolyamgörbék.</p>
-          </div>
-        </div>
+      <div style="margin-bottom: 25px;">
+        <a href="https://world-of-farmers.netlify.app" target="_blank" class="btn btn-live">🚀 Launch Live Web App (world-of-farmers.netlify.app)</a>
       </div>
 
-      <!-- Section 2: Core Game Systems -->
+      <!-- SECTION 1: TIME PROGRESSION & SIMULATION TICK LOOP -->
       <div class="doc-section">
-        <h3 class="doc-title">🌾 Főbb Játékszabályok és Rendszerek</h3>
-        <div class="doc-grid">
-          <div class="doc-box">
-            <h4>Parcellák és Talajápolás</h4>
-            <p>Állapotgép: <code>idle</code> ➔ <code>plowing</code> ➔ <code>plowed</code> ➔ <code>seeding</code> ➔ <code>growing</code> ➔ <code>ready</code> ➔ <code>harvesting</code>. A talajminőség hat a hozamra; szerves és műtrágyázással 100%-ra állítható.</p>
-          </div>
-          <div class="doc-box">
-            <h4>Géppark és Kopásmodell</h4>
-            <p>Traktorok, munkagépek és kombájnok. A kopás műveletenként: <code>1.0% + (ha × 0.15%)</code> (max 15% plafon). A teljes felújítás az újkori ár 30%-a.</p>
-          </div>
-          <div class="doc-box">
-            <h4>Supervisor Automatizáció</h4>
-            <p>Tömeges műveletirányítás: Tömeges szántás, Tömeges betakarítás, valamint Tömeges vetés növényválasztó drop-down menüvel (<code>handleBulkSow</code>).</p>
-          </div>
-          <div class="doc-box">
-            <h4>Gyártás & Offline Haladás</h4>
-            <p>Többlépcsős feldolgozóüzemek (Malom, Pékség, Biogáz, Fast Food). Újrainduláskor kiszámítja a távollét alatt lezajlott gyári ciklusokat.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Section 3: Formulas & Math -->
-      <div class="doc-section">
-        <h3 class="doc-title">🧮 Kiemelt Matematikai Képletek</h3>
-        <div class="doc-box" style="margin-bottom: 10px;">
-          <h4>1. Hozamszámítás (Calculate Yield)</h4>
-          <p><code>Yield = BaseYieldPerHa × Area × (0.7 + SoilQuality × 0.003) × FertilizerBonus × CountryBonus × ResearchMult</code></p>
-        </div>
-        <div class="doc-box">
-          <h4>2. Szervizköltség (Repair Cost)</h4>
-          <p><code>RepairCost = (PurchasePrice × 0.3) × ((100 - CurrentCondition) / 100)</code></p>
-        </div>
-      </div>
-
-      <!-- Section 4: Live Features & Audio -->
-      <div class="doc-section">
-        <h3 class="doc-title">🎧 Hangmotor és Felhő Integráció</h3>
-        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 12px;">
-          • <strong>SFX Audio Engine:</strong> Globális memóriacache-elt hangeffekt rendszer automatikus fallback útvonal-kezeléssel.<br>
-          • <strong>Live Market & Contracts:</strong> 3 óránként frissülő vállalati megbízások, büntetőösszeggel és XP jutalommal.<br>
-          • <strong>Global Leaderboard:</strong> Szinkronizált Supabase ranglista reakcióidő- és XP-követéssel.
+        <h3 class="doc-title">⚙️ 1. Time Progression & Tick Engine</h3>
+        <p class="doc-intro">
+          The game runs a deterministic 1Hz heartbeat tick loop through a centralized React reducer (<code>gameReducer</code>). It manages active operation timers, automatic state reconciliation, and dynamic offline catch-up calculations upon session initialization.
         </p>
+
+        <div class="code-block"><pre><code><span class="comment">// -------------------------------------------------------------------</span>
+<span class="comment">// 1. CENTRAL SIMULATION TICK LOOP & OFFLINE PROGRESSION CALCULATIONS</span>
+<span class="comment">// -------------------------------------------------------------------</span>
+<span class="keyword">case</span> <span class="string">'TICK'</span>: {
+  <span class="keyword">const</span> now = <span class="type">Date</span>.<span class="function">now</span>();
+  <span class="keyword">const</span> fields = state.fields.<span class="function">map</span>(f => ({ ...f }));
+  <span class="keyword">let</span> machines = state.machines.<span class="function">map</span>(m => ({ ...m }));
+  <span class="keyword">let</span> silo = [...state.silo];
+  <span class="keyword">let</span> { money, xp, totalHarvestedKg, totalEarned, lastMarketUpdate } = state;
+
+  <span class="comment">// Process operation expirations and field status transitions</span>
+  <span class="keyword">const</span> newGrowOps: <span class="type">Operation</span>[] = [];
+  <span class="keyword">const</span> filteredOps = state.operations.<span class="function">filter</span>(op => {
+    <span class="keyword">if</span> (now >= op.startTime + op.durationMs) {
+      <span class="keyword">const</span> field = fields.<span class="function">find</span>(f => f.id === op.fieldId);
+      <span class="keyword">if</span> (!field) <span class="keyword">return</span> <span class="keyword">false</span>;
+
+      <span class="comment">// Execute machine condition wear upon job completion</span>
+      <span class="keyword">if</span> (op.type !== <span class="string">'growing'</span>) {
+        machines.<span class="function">forEach</span>(m => {
+          <span class="keyword">if</span> (op.machineIds.<span class="function">includes</span>(m.id)) {
+            m.condition = Math.<span class="function">round</span>(Math.<span class="function">max</span>(<span class="number">0</span>, (m.condition ?? <span class="number">100</span>) - (<span class="number">1.0</span> + field.areaHectares * <span class="number">0.15</span>)) * <span class="number">10</span>) / <span class="number">10</span>;
+          }
+        });
+      }
+
+      <span class="comment">// State Machine Phase Transitions</span>
+      <span class="keyword">if</span> (op.type === <span class="string">'plowing'</span>) {
+        field.status = <span class="string">'plowed'</span>;
+        field.assignedMachineIds = [];
+        machines.<span class="function">forEach</span>(m => { <span class="keyword">if</span> (op.machineIds.<span class="function">includes</span>(m.id)) m.assignedFieldId = <span class="keyword">null</span>; });
+      } <span class="keyword">else if</span> (op.type === <span class="string">'seeding'</span>) {
+        field.status = <span class="string">'growing'</span>;
+        field.assignedMachineIds = [];
+        machines.<span class="function">forEach</span>(m => { <span class="keyword">if</span> (op.machineIds.<span class="function">includes</span>(m.id)) m.assignedFieldId = <span class="keyword">null</span>; });
+        
+        <span class="keyword">const</span> growMinutes = <span class="type">CROPS</span>[field.crop!]?.growTimeMinutes || <span class="number">5</span>;
+        newGrowOps.<span class="function">push</span>({ 
+          id: <span class="string">`grow-${now}-${field.id}`</span>, fieldId: field.id, fieldName: field.name, 
+          type: <span class="string">'growing'</span>, machineIds: [], startTime: now, durationMs: growMinutes * <span class="number">60000</span>, crop: field.crop! 
+        });
+      } <span class="keyword">else if</span> (op.type === <span class="string">'harvesting'</span>) {
+        field.status = <span class="string">'idle'</span>;
+        <span class="keyword">const</span> baseYieldKg = Math.<span class="function">round</span>(<span class="function">calculateYield</span>(field, op.crop));
+        silo = <span class="function">addToSilo</span>(silo, op.crop!, baseYieldKg);
+        field.crop = <span class="keyword">null</span>;
+        field.soilQuality = Math.<span class="function">max</span>(<span class="number">20</span>, field.soilQuality - <span class="number">10</span>);
+      }
+      <span class="keyword">return</span> <span class="keyword">false</span>;
+    }
+    <span class="keyword">return</span> <span class="keyword">true</span>;
+  });
+
+  <span class="keyword">return</span> { ...state, fields, machines, silo, operations: [...filteredOps, ...newGrowOps] };
+}</code>pre></div>
       </div>
 
-      <div style="margin-top: 25px; display: flex; gap: 12px;">
-        <a href="https://github.com/YOUR_USERNAME/YOUR_REPO" target="_blank" class="btn">GitHub Forráskód</a>
-        <button onclick="closeModal('modal1')" class="btn-secondary" style="cursor: pointer;">Bezárás</button>
+      <!-- SECTION 2: FIELD STATE MACHINE & LIFECYCLE RECOVERY -->
+      <div class="doc-section">
+        <h3 class="doc-title">🌱 2. Field Lifecycle & Orphan Operation Recovery</h3>
+        <p class="doc-intro">
+          Each field follows a rigid status state machine: <code>idle</code> ➔ <code>plowing</code> ➔ <code>plowed</code> ➔ <code>seeding</code> ➔ <code>growing</code> ➔ <code>ready_to_harvest</code> ➔ <code>harvesting</code>. An automated recovery pass fixes orphaned field states if asynchronous operations lose reference.
+        </p>
+
+        <div class="code-block"><pre><code><span class="comment">// -------------------------------------------------------------------</span>
+<span class="comment">// 2. FIELD STATUS TYPE & ORPHAN RECOVERY ALGORITHM</span>
+<span class="comment">// -------------------------------------------------------------------</span>
+<span class="keyword">export type</span> <span class="type">FieldStatus</span> = <span class="string">'idle'</span> | <span class="string">'plowing'</span> | <span class="string">'plowed'</span> | <span class="string">'seeding'</span> | <span class="string">'growing'</span> | <span class="string">'ready_to_harvest'</span> | <span class="string">'harvesting'</span>;
+
+<span class="comment">// Recovery pass executed inside game loop to clean dangling flags:</span>
+fields.<span class="function">forEach</span>(f => {
+  <span class="keyword">const</span> hasOp = activeOps.<span class="function">some</span>(op => op.fieldId === f.id);
+  <span class="keyword">if</span> (!hasOp) {
+    <span class="keyword">if</span> (f.status === <span class="string">'plowing'</span>) {
+      f.status = <span class="string">'idle'</span>;
+      f.assignedMachineIds = [];
+    } <span class="keyword">else if</span> (f.status === <span class="string">'seeding'</span>) {
+      f.status = <span class="string">'plowed'</span>;
+      f.assignedMachineIds = [];
+    } <span class="keyword">else if</span> (f.status === <span class="string">'harvesting'</span>) {
+      f.status = <span class="string">'ready_to_harvest'</span>;
+      f.assignedMachineIds = [];
+    } <span class="keyword">else if</span> (f.status === <span class="string">'growing'</span>) {
+      <span class="keyword">if</span> ((f.growthProgress || <span class="number">0</span>) >= <span class="number">100</span>) {
+        f.status = <span class="string">'ready_to_harvest'</span>;
+      }
+    }
+  }
+});</code>pre></div>
+      </div>
+
+      <!-- SECTION 3: MACHINERY WEAR MATHEMATICS & REPAIR COST -->
+      <div class="doc-section">
+        <h3 class="doc-title">🚜 3. Machinery Maintenance & Degradation Mathematics</h3>
+        <p class="doc-intro">
+          Machinery condition wears down based on the field size (ha). A protective cap limits degradation to a maximum of 15% per single dispatch, protecting game balance on late-game mega estates.
+        </p>
+
+        <div class="code-block"><pre><code><span class="comment">// -------------------------------------------------------------------</span>
+<span class="comment">// 3. MAINTENANCE MANAGER FORMULAS & REPAIR CALCULATIONS</span>
+<span class="comment">// -------------------------------------------------------------------</span>
+<span class="keyword">export class</span> <span class="type">MaintenanceManager</span> {
+  <span class="keyword">public static</span> <span class="function">calculateWear</span>(areaHectares: <span class="type">number</span>, currentCondition: <span class="type">number</span>): <span class="type">number</span> {
+    <span class="keyword">const</span> baseWear = <span class="number">1.0</span>; <span class="comment">// 1.0% base operational wear</span>
+    <span class="keyword">const</span> hectareWear = areaHectares * <span class="number">0.15</span>; <span class="comment">// +0.15% per hectare</span>
+    
+    <span class="keyword">let</span> totalWear = baseWear + hectareWear;
+    
+    <span class="comment">// Safety cap: prevent instant destruction on giant estates</span>
+    <span class="keyword">if</span> (totalWear > <span class="number">15</span>) {
+      totalWear = <span class="number">15</span>;
+    }
+    
+    <span class="keyword">const</span> newCondition = Math.<span class="function">max</span>(<span class="number">0</span>, currentCondition - totalWear);
+    <span class="keyword">return</span> Math.<span class="function">round</span>(newCondition * <span class="number">10</span>) / <span class="number">10</span>;
+  }
+
+  <span class="keyword">public static</span> <span class="function">getRepairCost</span>(machine: <span class="type">Machine</span>, purchasePrice: <span class="type">number</span>): <span class="type">number</span> {
+    <span class="keyword">const</span> lostCondition = <span class="number">100</span> - machine.condition;
+    <span class="keyword">if</span> (lostCondition <= <span class="number">0</span>) <span class="keyword">return</span> <span class="number">0</span>;
+    <span class="comment">// Full restoration (0% to 100%) costs 30% of original asset price</span>
+    <span class="keyword">return</span> Math.<span class="function">round</span>((purchasePrice * <span class="number">0.3</span>) * (lostCondition / <span class="number">100</span>));
+  }
+}</code>pre></div>
+      </div>
+
+      <!-- SECTION 4: YIELD MULTI-VARIABLE FORMULA -->
+      <div class="doc-section">
+        <h3 class="doc-title">🧮 4. Multi-Factor Crop Yield Calculation</h3>
+        <p class="doc-intro">
+          Harvested output is determined dynamically by combining base yield parameters, field soil quality, fertilizer boost status, and regional country suitability bonuses.
+        </p>
+
+        <div class="code-block"><pre><code><span class="comment">// -------------------------------------------------------------------</span>
+<span class="comment">// 4. DYNAMIC CROP YIELD COMPUTATION</span>
+<span class="comment">// -------------------------------------------------------------------</span>
+<span class="keyword">export function</span> <span class="function">calculateYield</span>(field: <span class="type">Field</span>, cropKey?: <span class="type">CropType</span>): <span class="type">number</span> {
+  <span class="keyword">const</span> crop = cropKey || field.crop;
+  <span class="keyword">if</span> (!field || !crop || !<span class="type">CROPS</span>[crop]) <span class="keyword">return</span> <span class="number">0</span>;
+
+  <span class="keyword">const</span> baseYield = <span class="type">CROPS</span>[crop].yieldKgPerHa * field.areaHectares;
+  <span class="keyword">const</span> soilMult = <span class="number">0.7</span> + (field.soilQuality / <span class="number">100</span>) * <span class="number">0.3</span>;
+  <span class="keyword">const</span> fertMult = field.fertilizerApplied ? <span class="number">1.25</span> : <span class="number">1.0</span>;
+  
+  <span class="keyword">const</span> countryData = <span class="function">getCountryData</span>(field.country);
+  <span class="keyword">const</span> countryBonus = countryData.suitableCrops.<span class="function">includes</span>(crop) 
+    ? countryData.yieldBonus 
+    : <span class="number">1.0</span>;
+  
+  <span class="keyword">return</span> Math.<span class="function">floor</span>(baseYield * soilMult * fertMult * countryBonus);
+}</code>pre></div>
+      </div>
+
+      <div style="margin-top: 25px; display: flex; gap: 12px; flex-wrap: wrap;">
+        <a href="https://world-of-farmers.netlify.app" target="_blank" class="btn btn-live">Play Live Demo</a>
+        <a href="https://github.com/YOUR_USERNAME/YOUR_REPO" target="_blank" class="btn">GitHub Repository</a>
+        <button onclick="closeModal('modal1')" class="btn-secondary" style="cursor: pointer;">Close Window</button>
       </div>
     </div>
   </div>
@@ -468,7 +594,8 @@
       if (evt) evt.target.classList.add('active');
 
       cards.forEach(card => {
-        if (cat === 'all' || card.getAttribute('data-category') === cat) {
+        const categories = (card.getAttribute('data-category') || '').split(' ');
+        if (cat === 'all' || categories.includes(cat)) {
           card.style.display = 'block';
         } else {
           card.style.display = 'none';

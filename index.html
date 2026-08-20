@@ -1,15 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hu">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Reels & Showcase Portfolio</title>
+  <title>Reels & Showcase Portfolio | Farm Empire Documentation</title>
   <style>
     :root {
       --bg-color: #0d0f12;
-      --card-bg: rgba(22, 27, 34, 0.7);
+      --card-bg: rgba(22, 27, 34, 0.75);
+      --modal-bg: #161b22;
       --accent-color: #00f2fe;
+      --accent-emerald: #10b981;
+      --accent-amber: #f59e0b;
       --accent-gradient: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
+      --emerald-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
       --text-color: #f0f6fc;
       --text-muted: #8b949e;
       --border-color: rgba(255, 255, 255, 0.1);
@@ -47,14 +51,14 @@
     }
 
     .subtitle {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       color: var(--text-muted);
       margin-bottom: 25px;
     }
 
     .btn {
       display: inline-block;
-      padding: 12px 28px;
+      padding: 10px 24px;
       background: var(--accent-gradient);
       color: #fff;
       text-decoration: none;
@@ -64,6 +68,7 @@
       transition: transform 0.2s, box-shadow 0.2s;
       border: none;
       cursor: pointer;
+      font-size: 0.9rem;
     }
 
     .btn:hover {
@@ -100,7 +105,7 @@
     /* Projects Grid */
     .projects-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
       gap: 25px;
       max-width: 1200px;
       margin: 0 auto;
@@ -198,7 +203,7 @@
       display: none;
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.8);
+      background: rgba(0, 0, 0, 0.85);
       backdrop-filter: blur(8px);
       z-index: 1000;
       justify-content: center;
@@ -211,28 +216,84 @@
     }
 
     .modal-content {
-      background: #161b22;
+      background: var(--modal-bg);
       border: 1px solid var(--border-color);
       border-radius: 20px;
-      max-width: 700px;
+      max-width: 850px;
       width: 100%;
       max-height: 90vh;
       overflow-y: auto;
-      padding: 30px;
+      padding: 35px;
       position: relative;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
     }
 
     .close-modal {
       position: absolute;
       top: 20px;
       right: 20px;
-      font-size: 1.5rem;
+      font-size: 1.8rem;
       color: var(--text-muted);
       cursor: pointer;
+      line-height: 1;
     }
 
     .close-modal:hover {
       color: var(--text-color);
+    }
+
+    /* Documentation Specific Styles inside Modal */
+    .doc-section {
+      margin-bottom: 28px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding-bottom: 20px;
+    }
+
+    .doc-section:last-child {
+      border-bottom: none;
+    }
+
+    .doc-title {
+      font-size: 1.2rem;
+      color: var(--accent-color);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .doc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 15px;
+      margin-top: 12px;
+    }
+
+    .doc-box {
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 14px;
+      border-radius: 12px;
+    }
+
+    .doc-box h4 {
+      color: #fff;
+      font-size: 0.95rem;
+      margin-bottom: 6px;
+    }
+
+    .doc-box p {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
+
+    code {
+      background: rgba(0, 242, 254, 0.1);
+      color: var(--accent-color);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: Consolas, monospace;
+      font-size: 0.88em;
     }
 
     footer {
@@ -246,73 +307,140 @@
 <body>
 
   <header>
-    <h1>Reels & Showcase Portfolio</h1>
-    <p class="subtitle">A collection of project reels, video demos, and downloadable builds.</p>
+    <h1>Game Developer Portfolio</h1>
+    <p class="subtitle">React, TypeScript & Unity Game Developer Portfolio</p>
     <a href="resume.pdf" class="btn" target="_blank">Download Resume (CV)</a>
   </header>
 
-  <!-- Category Filters -->
-  <div class="filter-container">
-    <button class="filter-btn active" onclick="filterCategory('all', event)">All Reels</button>
-    <button class="filter-btn" onclick="filterCategory('gameplay', event)">Gameplay Reels</button>
-    <button class="filter-btn" onclick="filterCategory('showcase', event)">Visual & Tech Reels</button>
-    <button class="filter-btn" onclick="filterCategory('prototypes', event)">Prototypes</button>
-  </div>
-
-  <!-- Projects / Reels Grid -->
-  <main class="projects-grid">
-
-    <!-- Reel Card 1 -->
-    <div class="project-card" data-category="gameplay" onclick="openModal('modal1')">
-      <div class="card-media">
-        <img src="preview1.jpg" alt="Reel Preview">
-      </div>
-      <div class="card-content">
-        <span class="tag">Gameplay Reel</span>
-        <h3 class="card-title">Project Alpha Reel</h3>
-        <p class="card-desc">Highlighting gameplay mechanics, visual effects, and dynamic environment features.</p>
-        <div class="card-actions">
-          <span class="btn-secondary">Read Breakdown</span>
-          <a href="https://drive.google.com/file/d/YOUR_FILE_ID/view" target="_blank" class="btn-secondary" onclick="event.stopPropagation()">Download Build (.exe)</a>
-        </div>
-      </div>
+  <main>
+    <!-- Category Filters -->
+    <div class="filter-container">
+      <button class="filter-btn active" onclick="filterCategory('all', event)">All Projects</button>
+      <button class="filter-btn" onclick="filterCategory('gameplay', event)">Gameplay & Simulation</button>
+      <button class="filter-btn" onclick="filterCategory('showcase', event)">Visual & Tech Showcase</button>
     </div>
 
-    <!-- Reel Card 2 -->
-    <div class="project-card" data-category="showcase" onclick="openModal('modal2')">
-      <div class="card-media">
-        <img src="preview2.jpg" alt="Reel Preview">
-      </div>
-      <div class="card-content">
-        <span class="tag">Visual Reel</span>
-        <h3 class="card-title">Environment Showcase</h3>
-        <p class="card-desc">Cinematic reel demonstrating lighting, shaders, and interactive environment elements.</p>
-        <div class="card-actions">
-          <span class="btn-secondary">Read Breakdown</span>
-          <a href="https://drive.google.com/file/d/YOUR_FILE_ID/view" target="_blank" class="btn-secondary" onclick="event.stopPropagation()">Download Build (.exe)</a>
+    <!-- Projects Grid -->
+    <div class="projects-grid">
+
+      <!-- Reel Card 1: FARM EMPIRE TYCOON -->
+      <div class="project-card" data-category="gameplay" onclick="openModal('modal1')">
+        <div class="card-media">
+          <img src="preview1.jpg" alt="Farm Empire Tycoon Gameplay">
+        </div>
+        <div class="card-content">
+          <span class="tag">Incremental Strategy / Web React</span>
+          <h3 class="card-title">Farm Empire Tycoon</h3>
+          <p class="card-desc">Átfogó mezőgazdasági szimulátor élő piaci árfolyamokkal, gépkopási mechanikákkal és Supervisor automatizációval.</p>
+          <div class="card-actions">
+            <span class="btn-secondary">Részletes Dokumentáció</span>
+            <a href="https://github.com/YOUR_USERNAME/YOUR_REPO" target="_blank" class="btn-secondary" onclick="event.stopPropagation()">GitHub Repo</a>
+          </div>
         </div>
       </div>
-    </div>
 
+      <!-- Reel Card 2: ENVIRONMENT SHOWCASE -->
+      <div class="project-card" data-category="showcase" onclick="openModal('modal2')">
+        <div class="card-media">
+          <img src="preview2.jpg" alt="Environment Showcase">
+        </div>
+        <div class="card-content">
+          <span class="tag">Visual Reel</span>
+          <h3 class="card-title">Environment Showcase</h3>
+          <p class="card-desc">Cinematic reel demonstrating lighting, shaders, and interactive environment elements.</p>
+          <div class="card-actions">
+            <span class="btn-secondary">Read Breakdown</span>
+            <a href="https://drive.google.com/file/d/YOUR_FILE_ID/view" target="_blank" class="btn-secondary" onclick="event.stopPropagation()">Download Build (.exe)</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
   </main>
 
-  <!-- Modal 1 -->
+  <!-- MODAL 1: FARM EMPIRE TYCOON ÁTFOGÓ DOKUMENTÁCIÓ -->
   <div id="modal1" class="modal" onclick="closeModal('modal1')">
     <div class="modal-content" onclick="event.stopPropagation()">
       <span class="close-modal" onclick="closeModal('modal1')">&times;</span>
-      <span class="tag">Gameplay Reel</span>
-      <h2>Project Alpha - Reel Breakdown</h2>
-      <p style="color: var(--text-muted); margin: 15px 0 20px;">Detailed insights into how this project reel was produced and structured.</p>
+      <span class="tag">Műszaki & Játékmeneti Dokumentáció</span>
+      <h2 style="font-size: 1.8rem; margin-top: 5px;">Farm Empire Tycoon — Rendszerarchitektúra</h2>
+      <p style="color: var(--text-muted); margin: 10px 0 25px;">
+        A Farm Empire Tycoon egy React + TypeScript alapon épült, valós idejű inkrementális stratógiai játék, komplex háttérmotorral, offline haladással és Supabase felhőalapú ranglistával.
+      </p>
 
-      <h3>Process & Workflow</h3>
-      <p style="margin: 10px 0 20px;">Describe how you created this project, the tools you used, key features, and any technical challenges you solved.</p>
+      <!-- Section 1: Tech Stack -->
+      <div class="doc-section">
+        <h3 class="doc-title">🛠️ Technológiai Stakk</h3>
+        <div class="doc-grid">
+          <div class="doc-box">
+            <h4>Frontend Core</h4>
+            <p>React 18+, TypeScript, Vite, Tailwind CSS v4, Framer Motion animációk.</p>
+          </div>
+          <div class="doc-box">
+            <h4>Állapotkezelés & Adatok</h4>
+            <p>React Context API + Reducer, <code>localStorage</code> automatikus szinkronizáció.</p>
+          </div>
+          <div class="doc-box">
+            <h4>Kereskedelem & Backend</h4>
+            <p>Supabase REST API (Leaderboard & Stats), Recharts élő árfolyamgörbék.</p>
+          </div>
+        </div>
+      </div>
 
-      <h3>Downloadable Files</h3>
-      <a href="https://drive.google.com/file/d/YOUR_FILE_ID/view" target="_blank" class="btn" style="margin-top: 10px;">Download Executable (.exe)</a>
+      <!-- Section 2: Core Game Systems -->
+      <div class="doc-section">
+        <h3 class="doc-title">🌾 Főbb Játékszabályok és Rendszerek</h3>
+        <div class="doc-grid">
+          <div class="doc-box">
+            <h4>Parcellák és Talajápolás</h4>
+            <p>Állapotgép: <code>idle</code> ➔ <code>plowing</code> ➔ <code>plowed</code> ➔ <code>seeding</code> ➔ <code>growing</code> ➔ <code>ready</code> ➔ <code>harvesting</code>. A talajminőség hat a hozamra; szerves és műtrágyázással 100%-ra állítható.</p>
+          </div>
+          <div class="doc-box">
+            <h4>Géppark és Kopásmodell</h4>
+            <p>Traktorok, munkagépek és kombájnok. A kopás műveletenként: <code>1.0% + (ha × 0.15%)</code> (max 15% plafon). A teljes felújítás az újkori ár 30%-a.</p>
+          </div>
+          <div class="doc-box">
+            <h4>Supervisor Automatizáció</h4>
+            <p>Tömeges műveletirányítás: Tömeges szántás, Tömeges betakarítás, valamint Tömeges vetés növényválasztó drop-down menüvel (<code>handleBulkSow</code>).</p>
+          </div>
+          <div class="doc-box">
+            <h4>Gyártás & Offline Haladás</h4>
+            <p>Többlépcsős feldolgozóüzemek (Malom, Pékség, Biogáz, Fast Food). Újrainduláskor kiszámítja a távollét alatt lezajlott gyári ciklusokat.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3: Formulas & Math -->
+      <div class="doc-section">
+        <h3 class="doc-title">🧮 Kiemelt Matematikai Képletek</h3>
+        <div class="doc-box" style="margin-bottom: 10px;">
+          <h4>1. Hozamszámítás (Calculate Yield)</h4>
+          <p><code>Yield = BaseYieldPerHa × Area × (0.7 + SoilQuality × 0.003) × FertilizerBonus × CountryBonus × ResearchMult</code></p>
+        </div>
+        <div class="doc-box">
+          <h4>2. Szervizköltség (Repair Cost)</h4>
+          <p><code>RepairCost = (PurchasePrice × 0.3) × ((100 - CurrentCondition) / 100)</code></p>
+        </div>
+      </div>
+
+      <!-- Section 4: Live Features & Audio -->
+      <div class="doc-section">
+        <h3 class="doc-title">🎧 Hangmotor és Felhő Integráció</h3>
+        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 12px;">
+          • <strong>SFX Audio Engine:</strong> Globális memóriacache-elt hangeffekt rendszer automatikus fallback útvonal-kezeléssel.<br>
+          • <strong>Live Market & Contracts:</strong> 3 óránként frissülő vállalati megbízások, büntetőösszeggel és XP jutalommal.<br>
+          • <strong>Global Leaderboard:</strong> Szinkronizált Supabase ranglista reakcióidő- és XP-követéssel.
+        </p>
+      </div>
+
+      <div style="margin-top: 25px; display: flex; gap: 12px;">
+        <a href="https://github.com/YOUR_USERNAME/YOUR_REPO" target="_blank" class="btn">GitHub Forráskód</a>
+        <button onclick="closeModal('modal1')" class="btn-secondary" style="cursor: pointer;">Bezárás</button>
+      </div>
     </div>
   </div>
 
-  <!-- Modal 2 -->
+  <!-- MODAL 2 -->
   <div id="modal2" class="modal" onclick="closeModal('modal2')">
     <div class="modal-content" onclick="event.stopPropagation()">
       <span class="close-modal" onclick="closeModal('modal2')">&times;</span>

@@ -11,8 +11,10 @@
       --modal-bg: #161b22;
       --accent-color: #00f2fe;
       --accent-emerald: #10b981;
+      --accent-amber: #f59e0b;
       --accent-gradient: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
       --emerald-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      --amber-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
       --text-color: #f0f6fc;
       --text-muted: #8b949e;
       --border-color: rgba(255, 255, 255, 0.1);
@@ -177,6 +179,11 @@
       background: rgba(16, 185, 129, 0.1);
     }
 
+    .tag-amber {
+      color: var(--accent-amber);
+      background: rgba(245, 158, 11, 0.1);
+    }
+
     .card-title {
       font-size: 1.3rem;
       font-weight: 700;
@@ -307,8 +314,8 @@
 <body>
 
   <header>
-    <h1>Project & Reels Showcase</h1>
-    <p class="subtitle">Interactive Web Engines, Python Pipelines & Data Systems</p>
+    <h1>Project & Showcase Portfolio</h1>
+    <p class="subtitle">Interactive Web Engines, Embedded Firmware & Data Systems</p>
     <a href="resume.pdf" class="btn" target="_blank">Download Resume (CV)</a>
   </header>
 
@@ -318,6 +325,7 @@
       <button class="filter-btn active" onclick="filterCategory('all', event)">All Projects</button>
       <button class="filter-btn" onclick="filterCategory('web-games', event)">Web & Playable Games</button>
       <button class="filter-btn" onclick="filterCategory('data', event)">Data & Python Engines</button>
+      <button class="filter-btn" onclick="filterCategory('embedded', event)">Hardware & Robotics</button>
     </div>
 
     <!-- Projects Grid -->
@@ -356,6 +364,25 @@
           <p class="card-desc">Automated parts inventory, pricing arrays, and in-memory SQL database pipeline built with Python, Pandas, DuckDB, and NumPy.</p>
           <div class="card-actions">
             <a href="carfactory.ipynb" target="_blank" class="btn btn-live" style="padding: 8px 18px; font-size: 0.85rem;" onclick="event.stopPropagation()">🐍 View Notebook</a>
+            <span class="btn-secondary">Technical Breakdown</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3: AGOPENGPS AUTOSTEER INTERFACE -->
+      <div class="project-card" data-category="embedded" onclick="openModal('modal3')">
+        <div class="card-media">
+          <img src="carfactoryheadpicture.jpg" alt="AgOpenGPS Autosteer Hardware Interface">
+        </div>
+        <div class="card-content">
+          <div class="tag-group">
+            <span class="tag tag-amber">C++ / Arduino</span>
+            <span class="tag">Embedded Systems</span>
+          </div>
+          <h3 class="card-title">AgOpenGPS Autosteer Interface</h3>
+          <p class="card-desc">Real-time microcontroller bridge connecting AgOpenGPS navigation software with physical steering actuators, 16-bit ADC WAS sensors, and OLED diagnostics.</p>
+          <div class="card-actions">
+            <span class="btn btn-live" style="padding: 8px 18px; font-size: 0.85rem;">⚡ Firmware Architecture</span>
             <span class="btn-secondary">Technical Breakdown</span>
           </div>
         </div>
@@ -427,6 +454,114 @@
 
       <div style="margin-top: 25px;">
         <button onclick="closeModal('modal2')" class="btn-secondary" style="cursor: pointer;">Close Window</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: AGOPENGPS AUTOSTEER FIRMWARE DOCUMENTATION -->
+  <div id="modal3" class="modal" onclick="closeModal('modal3')">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <span class="close-modal" onclick="closeModal('modal3')">&times;</span>
+      <div class="tag-group" style="margin-bottom: 12px;">
+        <span class="tag tag-amber">Embedded C++ / Arduino</span>
+        <span class="tag">Robotics & Hardware Control</span>
+      </div>
+      <h2 style="font-size: 2rem; margin-top: 5px;">AgOpenGPS Autosteer Hardware Interface</h2>
+      <p style="color: var(--text-muted); margin: 10px 0 20px;">
+        High-performance embedded control logic bridging AgOpenGPS navigation software with custom tractor autosteer hardware via serial packet parsing, closed-loop PD motor drive, high-precision ADC sampling, and live OLED diagnostics.
+      </p>
+
+      <!-- SECTION 1: PACKET PARSING & SERIAL BRIDGE -->
+      <div class="doc-section">
+        <h3 class="doc-title">📡 1. AgOpenGPS Serial Protocol & Packet Parser</h3>
+        <p class="doc-intro">
+          Parses incoming 14-byte binary telemetry frames from AgOpenGPS running at 115200 baud. Validates frame sync headers (<code>0x80</code>) and command function codes (<code>0xFE</code>) to extract target steering angles with high temporal fidelity.
+        </p>
+        <div class="code-block"><pre><code><span class="comment">// Serial Packet Parser Routine</span>
+<span class="keyword">void</span> <span class="function">readAOG</span>() {
+  <span class="keyword">static uint8_t</span> buf[<span class="number">14</span>];
+  <span class="keyword">static uint8_t</span> idx = <span class="number">0</span>;
+
+  <span class="keyword">while</span> (AOG.<span class="function">available</span>()) {
+    <span class="keyword">uint8_t</span> b = AOG.<span class="function">read</span>();
+    <span class="keyword">if</span> (idx == <span class="number">0</span> && b != <span class="number">0x80</span>) <span class="keyword">continue</span>; <span class="comment">// Sync frame header</span>
+
+    buf[idx++] = b;
+    <span class="keyword">if</span> (idx == <span class="number">14</span>) {
+      <span class="keyword">if</span> (buf[<span class="number">3</span>] == <span class="number">0xFE</span>) {
+        <span class="keyword">int16_t</span> d100 = (buf[<span class="number">8</span>] &lt;&lt; <span class="number">8</span>) | buf[<span class="number">7</span>];
+        targetDeg = d100 / <span class="number">100.0</span>; <span class="comment">// Convert byte pair to steer target</span>
+        lastAog = <span class="function">millis</span>();
+        packetCount++;
+      }
+      idx = <span class="number">0</span>;
+    }
+  }
+}</code>pre></div>
+      </div>
+
+      <!-- SECTION 2: WAS CALIBRATION -->
+      <div class="doc-section">
+        <h3 class="doc-title">🎯 2. Wheel Angle Sensor (WAS) 16-bit ADC Processing</h3>
+        <p class="doc-intro">
+          Utilizes an external 16-bit ADS1115 ADC over I2C to read high-resolution analog voltage feedback from the tractor's steering feedback sensor, converting raw ADC counts directly to physical wheel degrees.
+        </p>
+        <div class="code-block"><pre><code><span class="comment">// Analog ADC to Degree Mapping</span>
+<span class="keyword">void</span> <span class="function">readWAS</span>() {
+  <span class="keyword">int16_t</span> adc = ads.<span class="function">readADC_SingleEnded</span>(<span class="number">0</span>);
+  <span class="keyword">float</span> pct = (<span class="keyword">float</span>)(adc - WAS_LEFT) * <span class="number">100.0</span> / (<span class="keyword">float</span>)(WAS_RIGHT - WAS_LEFT);
+  pct = <span class="function">constrain</span>(pct, <span class="number">0</span>, <span class="number">100</span>);
+  wasDeg = (pct - <span class="number">50.0</span>) * (WAS_MAX_DEG * <span class="number">2.0</span> / <span class="number">100.0</span>);
+}</code>pre></div>
+      </div>
+
+      <!-- SECTION 3: CLOSED-LOOP PD MOTOR CONTROL & SAFETY WATCHDOG -->
+      <div class="doc-section">
+        <h3 class="doc-title">⚙️ 3. PD Closed-Loop Control & Safety Watchdog</h3>
+        <p class="doc-intro">
+          Drives an H-Bridge motor controller using a Proportional-Derivative (PD) feedback loop with deadband filtering (`0.5°`). Implements a 500ms safety fail-safe timeout that kills motor power automatically if communication with AgOpenGPS drops.
+        </p>
+        <div class="code-block"><pre><code><span class="comment">// PD Control & Fail-Safe Execution</span>
+<span class="keyword">void</span> <span class="function">controlMotor</span>() {
+  <span class="comment">// Safety Watchdog: Shut down PWM if connection lost for >500ms</span>
+  <span class="keyword">if</span> (<span class="function">millis</span>() - lastAog &gt; <span class="number">500</span>) {
+    <span class="function">analogWrite</span>(RPWM, <span class="number">0</span>); <span class="function">analogWrite</span>(LPWM, <span class="number">0</span>);
+    pwmOut = <span class="number">0</span>;
+    <span class="keyword">return</span>;
+  }
+
+  <span class="keyword">float</span> err = targetDeg - wasDeg;
+  <span class="keyword">float</span> deriv = err - lastErr;
+  lastErr = err;
+
+  <span class="keyword">if</span> (<span class="function">abs</span>(err) &lt; DEADBAND) {
+    <span class="function">analogWrite</span>(RPWM, <span class="number">0</span>); <span class="function">analogWrite</span>(LPWM, <span class="number">0</span>);
+    pwmOut = <span class="number">0</span>;
+    <span class="keyword">return</span>;
+  }
+
+  <span class="keyword">float</span> out = KP * err + KD * deriv;
+  <span class="keyword">int</span> pwm = <span class="function">constrain</span>(<span class="function">abs</span>(out) * <span class="number">40</span>, PWM_MIN, PWM_MAX);
+  pwmOut = pwm;
+
+  <span class="keyword">if</span> (out &gt; <span class="number">0</span>) {
+    <span class="function">analogWrite</span>(RPWM, pwm); <span class="function">analogWrite</span>(LPWM, <span class="number">0</span>);
+  } <span class="keyword">else</span> {
+    <span class="function">analogWrite</span>(LPWM, pwm); <span class="function">analogWrite</span>(RPWM, <span class="number">0</span>);
+  }
+}</code>pre></div>
+      </div>
+
+      <!-- SECTION 4: REAL-TIME DIAGNOSTICS & DISPLAY -->
+      <div class="doc-section">
+        <h3 class="doc-title">📺 4. OLED Visual Diagnostics & Dual Serial Logging</h3>
+        <p class="doc-intro">
+          Renders real-time operational metrics to an SH1106 OLED display using the U8g2 library at 2.5Hz, while concurrently logging hex packet frames, target angles, current WAS position, error delta, and PWM levels across a secondary hardware serial channel.
+        </p>
+      </div>
+
+      <div style="margin-top: 25px;">
+        <button onclick="closeModal('modal3')" class="btn-secondary" style="cursor: pointer;">Close Window</button>
       </div>
     </div>
   </div>

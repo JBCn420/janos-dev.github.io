@@ -360,6 +360,43 @@
         </div>
       </div>
 
+
+<!-- MODAL 2: CAR FACTORY TECHNICAL DOCUMENTATION -->
+  <div id="modal2" class="modal" onclick="closeModal('modal2')">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <span class="close-modal" onclick="closeModal('modal2')">&times;</span>
+      <div class="tag-group" style="margin-bottom: 12px;">
+        <span class="tag tag-emerald">Jupyter / Colab Notebook</span>
+        <span class="tag">Data & SQL Architecture</span>
+      </div>
+      <h2 style="font-size: 2rem; margin-top: 5px;">Car Factory Engine — Data Pipeline</h2>
+      <p style="color: var(--text-muted); margin: 10px 0 20px;">
+        Python data processing script designed for automotive inventory management, component pricing, and relational querying via DuckDB.
+      </p>
+
+      <div style="margin-bottom: 25px; display: flex; gap: 12px; flex-wrap: wrap;">
+        <a href="carfactory.ipynb" target="_blank" class="btn btn-live">📄 View Notebook on GitHub</a>
+        <a href="https://colab.research.google.com/drive/1O8Z0vtRNrd48_P1Lgmc_zF7ths8Hqo9t" target="_blank" class="btn">⚡ Open in Google Colab</a>
+      </div>
+
+      <div class="doc-section">
+        <h3 class="doc-title">⚙️ Tech Stack & Key Features</h3>
+        <p class="doc-intro">
+          This notebook demonstrates structured data creation, inventory stock tracking, pricing metrics, and high-performance SQL querying directly inside Python.
+        </p>
+        <ul style="margin-left: 20px; color: var(--text-muted); line-height: 1.8;">
+          <li><strong>Pandas & NumPy:</strong> Structured dataframe generation for vehicle components and pricing arrays.</li>
+          <li><strong>DuckDB:</strong> In-memory SQL engine for executing queries without external server infrastructure.</li>
+          <li><strong>Automated Stock Management:</strong> Logic for tracking spare parts, category grouping, and financial metrics.</li>
+        </ul>
+      </div>
+
+      <div style="margin-top: 25px;">
+        <button onclick="closeModal('modal2')" class="btn-secondary" style="cursor: pointer;">Close Window</button>
+      </div>
+    </div>
+  </div>
+      
       <!-- Reel Card 2: ENVIRONMENT SHOWCASE -->
       <div class="project-card" data-category="showcase" onclick="openModal('modal2')">
         <div class="card-media">

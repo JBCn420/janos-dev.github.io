@@ -324,6 +324,7 @@
     <div class="filter-container">
       <button class="filter-btn active" onclick="filterCategory('all', event)">All Projects</button>
       <button class="filter-btn" onclick="filterCategory('web-games', event)">Web & Playable Games</button>
+      <button class="filter-btn" onclick="filterCategory('ai', event)">AI & Simulation</button>
       <button class="filter-btn" onclick="filterCategory('data', event)">Data & Python Engines</button>
       <button class="filter-btn" onclick="filterCategory('embedded', event)">Hardware & Robotics</button>
     </div>
@@ -383,6 +384,25 @@
           <p class="card-desc">Real-time microcontroller bridge connecting AgOpenGPS navigation software with physical steering actuators, 16-bit ADC WAS sensors, and OLED diagnostics.</p>
           <div class="card-actions">
             <span class="btn btn-live" style="padding: 8px 18px; font-size: 0.85rem;">⚡ Firmware Architecture</span>
+            <span class="btn-secondary">Technical Breakdown</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4: AGESIM OLLAMA AI ENGINE -->
+      <div class="project-card" data-category="web-games ai" onclick="openModal('modal4')">
+        <div class="card-media">
+          <img src="WOFSSjpg.jpg" alt="AgeSim Ollama AI Engine">
+        </div>
+        <div class="card-content">
+          <div class="tag-group">
+            <span class="tag tag-emerald">Ollama & Llama 3.2</span>
+            <span class="tag">Social Network Matrix</span>
+          </div>
+          <h3 class="card-title">AgeSim: LLM Villager AI & Social Matrix</h3>
+          <p class="card-desc">Intent-driven prehistoric simulation with local Llama 3.2 inference, anti-flicker cognitive scheduling, dynamic social matrix, and peer-to-peer blueprint sharing.</p>
+          <div class="card-actions">
+            <span class="btn btn-live" style="padding: 8px 18px; font-size: 0.85rem;">🤖 AI Architecture</span>
             <span class="btn-secondary">Technical Breakdown</span>
           </div>
         </div>
@@ -471,7 +491,6 @@
         High-performance embedded control logic bridging AgOpenGPS navigation software with custom tractor autosteer hardware via serial packet parsing, closed-loop PD motor drive, high-precision ADC sampling, and live OLED diagnostics.
       </p>
 
-      <!-- SECTION 1: PACKET PARSING & SERIAL BRIDGE -->
       <div class="doc-section">
         <h3 class="doc-title">📡 1. AgOpenGPS Serial Protocol & Packet Parser</h3>
         <p class="doc-intro">
@@ -484,13 +503,13 @@
 
   <span class="keyword">while</span> (AOG.<span class="function">available</span>()) {
     <span class="keyword">uint8_t</span> b = AOG.<span class="function">read</span>();
-    <span class="keyword">if</span> (idx == <span class="number">0</span> && b != <span class="number">0x80</span>) <span class="keyword">continue</span>; <span class="comment">// Sync frame header</span>
+    <span class="keyword">if</span> (idx == <span class="number">0</span> && b != <span class="number">0x80</span>) <span class="keyword">continue</span>;
 
     buf[idx++] = b;
     <span class="keyword">if</span> (idx == <span class="number">14</span>) {
       <span class="keyword">if</span> (buf[<span class="number">3</span>] == <span class="number">0xFE</span>) {
         <span class="keyword">int16_t</span> d100 = (buf[<span class="number">8</span>] &lt;&lt; <span class="number">8</span>) | buf[<span class="number">7</span>];
-        targetDeg = d100 / <span class="number">100.0</span>; <span class="comment">// Convert byte pair to steer target</span>
+        targetDeg = d100 / <span class="number">100.0</span>;
         lastAog = <span class="function">millis</span>();
         packetCount++;
       }
@@ -500,7 +519,6 @@
 }</code>pre></div>
       </div>
 
-      <!-- SECTION 2: WAS CALIBRATION -->
       <div class="doc-section">
         <h3 class="doc-title">🎯 2. Wheel Angle Sensor (WAS) 16-bit ADC Processing</h3>
         <p class="doc-intro">
@@ -515,53 +533,127 @@
 }</code>pre></div>
       </div>
 
-      <!-- SECTION 3: CLOSED-LOOP PD MOTOR CONTROL & SAFETY WATCHDOG -->
       <div class="doc-section">
         <h3 class="doc-title">⚙️ 3. PD Closed-Loop Control & Safety Watchdog</h3>
         <p class="doc-intro">
           Drives an H-Bridge motor controller using a Proportional-Derivative (PD) feedback loop with deadband filtering (`0.5°`). Implements a 500ms safety fail-safe timeout that kills motor power automatically if communication with AgOpenGPS drops.
         </p>
-        <div class="code-block"><pre><code><span class="comment">// PD Control & Fail-Safe Execution</span>
-<span class="keyword">void</span> <span class="function">controlMotor</span>() {
-  <span class="comment">// Safety Watchdog: Shut down PWM if connection lost for >500ms</span>
-  <span class="keyword">if</span> (<span class="function">millis</span>() - lastAog &gt; <span class="number">500</span>) {
-    <span class="function">analogWrite</span>(RPWM, <span class="number">0</span>); <span class="function">analogWrite</span>(LPWM, <span class="number">0</span>);
-    pwmOut = <span class="number">0</span>;
-    <span class="keyword">return</span>;
-  }
-
-  <span class="keyword">float</span> err = targetDeg - wasDeg;
-  <span class="keyword">float</span> deriv = err - lastErr;
-  lastErr = err;
-
-  <span class="keyword">if</span> (<span class="function">abs</span>(err) &lt; DEADBAND) {
-    <span class="function">analogWrite</span>(RPWM, <span class="number">0</span>); <span class="function">analogWrite</span>(LPWM, <span class="number">0</span>);
-    pwmOut = <span class="number">0</span>;
-    <span class="keyword">return</span>;
-  }
-
-  <span class="keyword">float</span> out = KP * err + KD * deriv;
-  <span class="keyword">int</span> pwm = <span class="function">constrain</span>(<span class="function">abs</span>(out) * <span class="number">40</span>, PWM_MIN, PWM_MAX);
-  pwmOut = pwm;
-
-  <span class="keyword">if</span> (out &gt; <span class="number">0</span>) {
-    <span class="function">analogWrite</span>(RPWM, pwm); <span class="function">analogWrite</span>(LPWM, <span class="number">0</span>);
-  } <span class="keyword">else</span> {
-    <span class="function">analogWrite</span>(LPWM, pwm); <span class="function">analogWrite</span>(RPWM, <span class="number">0</span>);
-  }
-}</code>pre></div>
-      </div>
-
-      <!-- SECTION 4: REAL-TIME DIAGNOSTICS & DISPLAY -->
-      <div class="doc-section">
-        <h3 class="doc-title">📺 4. OLED Visual Diagnostics & Dual Serial Logging</h3>
-        <p class="doc-intro">
-          Renders real-time operational metrics to an SH1106 OLED display using the U8g2 library at 2.5Hz, while concurrently logging hex packet frames, target angles, current WAS position, error delta, and PWM levels across a secondary hardware serial channel.
-        </p>
       </div>
 
       <div style="margin-top: 25px;">
         <button onclick="closeModal('modal3')" class="btn-secondary" style="cursor: pointer;">Close Window</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 4: AGESIM OLLAMA AI ENGINE & SOCIAL MATRIX -->
+  <div id="modal4" class="modal" onclick="closeModal('modal4')">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <span class="close-modal" onclick="closeModal('modal4')">&times;</span>
+      <div class="tag-group" style="margin-bottom: 12px;">
+        <span class="tag tag-emerald">TypeScript / Node.js</span>
+        <span class="tag">Local LLM (Ollama) & Social Matrix</span>
+      </div>
+      <h2 style="font-size: 2rem; margin-top: 5px;">AgeSim — Intent-Driven LLM & Social Network Architecture</h2>
+      <p style="color: var(--text-muted); margin: 10px 0 20px;">
+        A 3-layer hybrid villager control engine combining high-priority survival overrides, asynchronous local LLM inference (Llama 3.2 via Ollama API), dynamic social affinity matrices, and peer-to-peer technology blueprint diffusion.
+      </p>
+
+      <!-- SECTION 1: 3-LAYER HYBRID ARCHITECTURE -->
+      <div class="doc-section">
+        <h3 class="doc-title">🧠 1. Three-Layer Hybrid Cognitive Architecture</h3>
+        <p class="doc-intro">
+          To maintain real-time simulation performance without browser lag, entity decision-making follows a strict 3-tier precedence pipeline:
+        </p>
+        <ul style="margin-left: 20px; color: var(--text-muted); line-height: 1.8; margin-bottom: 15px;">
+          <li><strong>Layer 1 (Survival Overrides & Reflexes):</strong> Instant deterministic checks for predator attacks (e.g., fighting or fleeing shelter), starvation, exhaustion, carcass harvesting, or full inventory resource dropping[cite: 1].</li>
+          <li><strong>Layer 2 (Asynchronous LLM Cognitive Scheduler):</strong> Calls local Ollama (`llama3.2:latest`) to request high-level goals when idle[cite: 1, 2]. Uses randomized action locks (`actionLockTimer = 260-410 ticks`) to prevent erratic back-and-forth decision flickering[cite: 1].</li>
+          <li><strong>Layer 3 (Behavior Tree Execution Engine):</strong> Runs deterministic node functions (`goToTileAndWork`, `moveToCoordinatesAndExecute`) to execute work timers, pathing, and state transitions[cite: 1, 3].</li>
+        </ul>
+
+        <div class="code-block"><pre><code><span class="comment">// Layer 2: Async LLM Cognitive Dispatch & Anti-Flicker Action Locking</span>
+<span class="keyword">if</span> (v.currentAction === <span class="string">'IDLE'</span> && !v.isThinking && (v <span class="keyword">as</span> <span class="type">any</span>).actionLockTimer &lt;= <span class="number">0</span>) {
+    v.isThinking = <span class="keyword">true</span>;
+    v.statusText = <span class="string">"🤔 Looking at sky, planning chores..."</span>;
+    
+    AiService.<span class="function">requestVillagerIntent</span>(v).<span class="function">then</span>(intent =&gt; {
+        v.isThinking = <span class="keyword">false</span>;
+        (<span class="keyword">v</span> <span class="keyword">as</span> <span class="type">any</span>).brainTickDelay = Math.<span class="function">floor</span>(<span class="number">40</span> + Math.<span class="function">random</span>() * <span class="number">30</span>);
+        
+        <span class="keyword">if</span> (intent) {
+            v.currentAction = intent.action;
+            v.statusText = intent.statusText;
+            v.reasoningText = intent.reasoning;
+            (<span class="keyword">v</span> <span class="keyword">as</span> <span class="type">any</span>).actionLockTimer = Math.<span class="function">floor</span>(<span class="number">260</span> + Math.<span class="function">random</span>() * <span class="number">150</span>); <span class="comment">// Stable lock buffer</span>
+        }
+    });
+}</code>pre></div>
+      </div>
+
+      <!-- SECTION 2: DYNAMIC SOCIAL MATRIX & BLUEPRINT DIFFUSION -->
+      <div class="doc-section">
+        <h3 class="doc-title">🔥 2. Social Network Matrix & Knowledge Propagation</h3>
+        <p class="doc-intro">
+          Villagers maintain a persistent <code>socialMatrix</code> tracking numeric affinity values (0 to 100) toward other personality traits (e.g., <code>barbarian</code>, <code>pacifist</code>, <code>melancholic</code>, <code>lazy</code>)[cite: 1, 4].
+        </p>
+        <p class="doc-intro">
+          During night cycles (`BONFIRE_SOCIAL`), villagers gather near the tribal campfire[cite: 1]. The engine triggers Ollama to generate context-aware primeval dialogue and relationship deltas[cite: 1, 2]. When a social bond crosses threshold levels (`newBond >= 55`), villagers automatically teach technology blueprints (e.g., spear crafting) to their peers[cite: 1].
+        </p>
+
+        <div class="code-block"><pre><code><span class="comment">// Social Interaction & Peer-to-Peer Blueprint Propagation</span>
+<span class="keyword">if</span> (neighbor) {
+    v.interactionTimer = <span class="number">350</span>;
+    AiService.<span class="function">requestSocialChat</span>(v, neighbor).<span class="function">then</span>(res =&gt; {
+        <span class="keyword">if</span> (res) {
+            v.statusText = <span class="string">`🗣️ "${res.dialogue}"`</span>;
+            <span class="keyword">const</span> currentBond = (v <span class="keyword">as</span> <span class="type">any</span>).socialMatrix[neighbor.trait] || <span class="number">50</span>;
+            <span class="keyword">const</span> newBond = Math.<span class="function">max</span>(<span class="number">0</span>, Math.<span class="function">min</span>(<span class="number">100</span>, currentBond + res.relationChange));
+            
+            (v <span class="keyword">as</span> <span class="type">any</span>).socialMatrix[neighbor.trait] = newBond;
+            (neighbor <span class="keyword">as</span> <span class="type">any</span>).socialMatrix[v.trait] = newBond;
+
+            <span class="comment">// Blueprint Sharing Gate: Teach spear creation if bond >= 55</span>
+            <span class="keyword">if</span> ((v <span class="keyword">as</span> <span class="type">any</span>).hasSpearBlueprint && !(neighbor <span class="keyword">as</span> <span class="type">any</span>).hasSpearBlueprint && newBond &gt;= <span class="number">55</span>) {
+                (neighbor <span class="keyword">as</span> <span class="type">any</span>).hasSpearBlueprint = <span class="keyword">true</span>;
+                v.statusText = <span class="string">`🗣️ "Look at this tool I made! Tied flint to wood!"`</span>;
+                neighbor.statusText = <span class="string">`😮 "Wow! Show me how to tie it!"`</span>;
+            }
+        }
+    });
+}</code>pre></div>
+      </div>
+
+      <!-- SECTION 3: TECH-GATED PROMPTING & SANITIZATION -->
+      <div class="doc-section">
+        <h3 class="doc-title">🛡️ 3. Dynamic Tech-Gated Prompting & Enum Sanitization</h3>
+        <p class="doc-intro">
+          The `AiService` inspects village state (`ResearchManager`) to dynamically restrict action pools, ensuring LLMs never attempt locked actions (e.g., farming before agriculture is unlocked)[cite: 2, 7].
+        </p>
+        <p class="doc-intro">
+          String responses are sanitized via regex to convert human-readable space formatting into strict code enum identifiers (e.g., `GATHER WATER` ➔ `GATHER_WATER`)[cite: 2].
+        </p>
+
+        <div class="code-block"><pre><code><span class="comment">// Enum String Sanitization Pipeline</span>
+<span class="keyword">let</span> rawText = data.choices?.[<span class="number">0</span>]?.message?.content || <span class="string">'{}'</span>;
+<span class="keyword">const</span> intent = JSON.<span class="function">parse</span>(rawText) <span class="keyword">as</span> <span class="type">VillagerIntent</span>;
+
+<span class="keyword">if</span> (intent && intent.action) {
+    <span class="keyword">let</span> sanitized = intent.action.<span class="function">toUpperCase</span>().<span class="function">trim</span>();
+    sanitized = sanitized.<span class="function">replace</span>(<span class="regexp">/\s+/g</span>, <span class="string">'_'</span>); <span class="comment">// Converts "GATHER WATER" -> "GATHER_WATER"</span>
+    intent.action = sanitized <span class="keyword">as any</span>;
+}</code>pre></div>
+      </div>
+
+      <!-- SECTION 4: SPATIAL PATHFINDING -->
+      <div class="doc-section">
+        <h3 class="doc-title">🗺️ 4. Role-Aware A* Grid Navigation</h3>
+        <p class="doc-intro">
+          Entity movement is computed on a 40px grid using an A* pathfinder[cite: 6]. Terrain passability matrices grant dynamic traversal rights (e.g., water gatherers accessing liquid edges) while capping path iteration ceilings to protect performance[cite: 6].
+        </p>
+      </div>
+
+      <div style="margin-top: 25px;">
+        <button onclick="closeModal('modal4')" class="btn-secondary" style="cursor: pointer;">Close Window</button>
       </div>
     </div>
   </div>

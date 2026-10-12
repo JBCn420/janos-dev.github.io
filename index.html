@@ -342,7 +342,7 @@
     <div class="projects-grid">
 
       <!-- Card 1: THE LAST ENGINEER -->
-      <div class="project-card" data-category="web-games embedded" onclick="window.open('the-last-engineer/', '_blank')">
+      <div class="project-card" data-category="web-games embedded" onclick="openModal('modal5')">
         <div class="card-media">
           <img src="lastengineer.jpg" alt="The Last Engineer title screen">
         </div>
@@ -380,7 +380,7 @@
       </div>
 
       <!-- Card 3: DELIGRAM -->
-      <div class="project-card" data-category="web-games" onclick="window.open('https://royalphantomdev.itch.io/deligram', '_blank')">
+      <div class="project-card" data-category="web-games" onclick="openModal('modal6')">
         <div class="card-media">
           <img src="deligram.jpg" alt="Deligram gameplay: tractors, fields and a script editor">
         </div>
@@ -393,6 +393,7 @@
           <p class="card-desc">A logistics programming game: write real JavaScript to drive a fleet of tractors, harvesters, trucks and trains, farm fields, feed production chains and grow towns. Alpha for Windows.</p>
           <div class="card-actions">
             <a href="https://royalphantomdev.itch.io/deligram" target="_blank" class="btn btn-live" style="padding: 8px 18px; font-size: 0.85rem;" onclick="event.stopPropagation()">🎮 Download on itch.io</a>
+            <span class="btn-secondary">Technical Breakdown</span>
           </div>
         </div>
       </div>
@@ -700,6 +701,147 @@
 
       <div style="margin-top: 25px;">
         <button onclick="closeModal('modal4')" class="btn-secondary" style="cursor: pointer;">Close Window</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 5: THE LAST ENGINEER -->
+  <div id="modal5" class="modal" onclick="closeModal('modal5')">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <span class="close-modal" onclick="closeModal('modal5')">&times;</span>
+      <div class="tag-group" style="margin-bottom: 12px;">
+        <span class="tag tag-emerald">Playable in the browser</span>
+        <span class="tag">Architecture & Technical Deep Dive</span>
+      </div>
+      <h2 style="font-size: 2rem; margin-top: 5px;">The Last Engineer — Robot Programming Game</h2>
+      <p style="color: var(--text-muted); margin: 10px 0 20px;">
+        A browser game about programming an industrial robot. You drive a six-axis arm the way a real cell is programmed: jog it by hand, teach positions, then write a program that moves between them with point-to-point and linear motion, grabs parts, waits for signals and reacts to sensors.
+      </p>
+
+      <div style="margin-bottom: 25px;">
+        <a href="the-last-engineer/" target="_blank" class="btn btn-live">🤖 Play The Last Engineer</a>
+      </div>
+
+      <div class="doc-section">
+        <h3 class="doc-title">🦾 1. A Six-Axis Arm in Three.js</h3>
+        <p class="doc-intro">The robot, its tools and every work cell are rendered in Three.js and written in TypeScript, built with Vite into a static page that runs anywhere.</p>
+        <ul style="margin-left: 20px; color: var(--text-muted); line-height: 1.8;">
+          <li><strong>Industrial robot classes:</strong> a small and a large arm (KR 3-class and KR 16-class) with their own reach.</li>
+          <li><strong>Teach pendant:</strong> jog the arm by hand, then save where the gripper is as a named <code>Position</code>.</li>
+          <li><strong>Tool changing:</strong> grippers, a seeding nozzle, a harvest gripper with a rangefinder and an icing nozzle, swapped with <code>take_tool()</code> / <code>release_tool()</code>.</li>
+          <li><strong>Collision awareness:</strong> the arm knows its own parts (upper arm, forearm, wrist, flange), so a crash names exactly what hit what.</li>
+        </ul>
+      </div>
+
+      <div class="doc-section">
+        <h3 class="doc-title">🐍 2. A Python-Style Robot Language</h3>
+        <p class="doc-intro">Programs are written in a small, Python-like language with its own interpreter: <code>def</code>, <code>if</code>/<code>else</code>, <code>for i in range(n)</code>, <code>while</code>, lists and built-ins such as <code>len</code>, <code>min</code>, <code>max</code> and <code>round</code>. Motion follows real robot conventions.</p>
+        <div class="code-block"><pre><code><span class="comment"># Example program: pick a part and place it in the product's nest</span>
+<span class="keyword">def</span> <span class="function">pick</span>(spot):
+    <span class="function">PTP</span>(<span class="function">above</span>(spot))      <span class="comment"># fast joint move to just above</span>
+    <span class="function">LIN</span>(spot)             <span class="comment"># straight line down</span>
+    <span class="function">grab</span>()
+    <span class="function">LIN</span>(<span class="function">above</span>(spot, mm=<span class="number">150</span>))
+
+<span class="keyword">for</span> i <span class="keyword">in</span> <span class="function">range</span>(<span class="number">3</span>):
+    <span class="function">next_part</span>()
+    <span class="function">pick</span>(part_spot)       <span class="comment"># a Position taught on the pendant</span>
+    ...</code></pre></div>
+        <ul style="margin-left: 20px; color: var(--text-muted); line-height: 1.8;">
+          <li><strong>PTP vs LIN:</strong> point-to-point joint moves for speed, linear moves when the tool must travel in a straight line.</li>
+          <li><strong>Signals and sensors:</strong> <code>wait_for()</code>, <code>signal()</code> and <code>scan()</code> let a program coordinate with belts, an oven bot and a mixer bot.</li>
+          <li><strong>Library:</strong> functions the player writes once and can call from every level.</li>
+        </ul>
+      </div>
+
+      <div class="doc-section">
+        <h3 class="doc-title">🏭 3. Themed Campaigns & Scoring</h3>
+        <p class="doc-intro">Three campaigns, each teaching programming ideas through a real job on the cell:</p>
+        <ul style="margin-left: 20px; color: var(--text-muted); line-height: 1.8;">
+          <li><strong>Car factory:</strong> parts and product belts, filling slots to order, and a quality check that sorts bad parts into a reject bin.</li>
+          <li><strong>Kitchen:</strong> decorating cookies tile by tile from an order card (<code>tile(row, col)</code>, loops inside loops) and timing an oven bot.</li>
+          <li><strong>Grow room:</strong> seeding pots, running light and water, then finding and harvesting buds of different quality with a rangefinder.</li>
+          <li><strong>Stars:</strong> each level randomises its setup on reset, so a program has to work in general, not just once. Attempt times are simulated seconds, so a score is the same at any simulation speed, and every mistake costs a star.</li>
+        </ul>
+      </div>
+
+      <div style="margin-top: 25px;">
+        <button onclick="closeModal('modal5')" class="btn-secondary" style="cursor: pointer;">Close Window</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 6: DELIGRAM -->
+  <div id="modal6" class="modal" onclick="closeModal('modal6')">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <span class="close-modal" onclick="closeModal('modal6')">&times;</span>
+      <div class="tag-group" style="margin-bottom: 12px;">
+        <span class="tag tag-emerald">Free on itch.io</span>
+        <span class="tag">Architecture & Technical Deep Dive</span>
+      </div>
+      <h2 style="font-size: 2rem; margin-top: 5px;">Deligram — Logistics Programming Game</h2>
+      <p style="color: var(--text-muted); margin: 10px 0 20px;">
+        A transport and farming game you play by writing real JavaScript. Every machine on the map — tractors, harvesters, trucks and a train — is driven by its own script in a floating code editor. Grow crops, haul them through production chains (field → mill → bakery) and deliver goods so the town grows.
+      </p>
+
+      <div style="margin-bottom: 25px;">
+        <a href="https://royalphantomdev.itch.io/deligram" target="_blank" class="btn btn-live">🎮 Download Free on itch.io</a>
+      </div>
+
+      <div class="doc-section">
+        <h3 class="doc-title">🧭 1. From Web Prototype to Unity</h3>
+        <p class="doc-intro">Deligram started as a Three.js + TypeScript prototype where every mechanic was designed and tested, then was ported to <strong>Unity 6 (URP) and C#</strong> for the release.</p>
+        <ul style="margin-left: 20px; color: var(--text-muted); line-height: 1.8;">
+          <li><strong>Hybrid architecture:</strong> the 3D world runs in Unity (WebGL), while the code editor, HUD and panels are HTML/JavaScript on the page around it.</li>
+          <li><strong>Command bridge:</strong> each script command is sent as a JSON message <code>{ id, unitId, name, args }</code> through a <code>.jslib</code> plugin to a C# <code>CommandRouter</code>, which hands it to that vehicle and sends the reply back.</li>
+          <li><strong>Desktop build:</strong> the WebGL build is packed into a single portable Windows <code>.exe</code> using WebView2.</li>
+        </ul>
+      </div>
+
+      <div class="doc-section">
+        <h3 class="doc-title">⌨️ 2. Real JavaScript, Made Safe to Run</h3>
+        <p class="doc-intro">Player scripts are real JavaScript. Before a script runs, a source transform makes it behave like a robot program:</p>
+        <div class="code-block"><pre><code><span class="comment">// Tractor_1: keep the wheat fields in crop</span>
+<span class="keyword">const</span> FIELDS = [<span class="string">"Wheat_Field"</span>, <span class="string">"Wheat_Field_2"</span>, <span class="string">"Wheat_Field_3"</span>];
+
+<span class="keyword">while</span> (<span class="keyword">true</span>) {
+  <span class="keyword">for</span> (<span class="keyword">const</span> f <span class="keyword">of</span> FIELDS) {
+    <span class="keyword">const</span> g = <span class="function">field</span>(f);
+    <span class="keyword">if</span> (g.isHarvested && g.needsFertilizer) {
+      <span class="function">change_implement</span>(<span class="string">"spreader"</span>);
+      <span class="function">go_to</span>(<span class="string">"Fertilizer_Plant"</span>);
+      <span class="function">load</span>(<span class="string">"fertilizer"</span>, <span class="number">16</span>);
+      <span class="function">go_to</span>(f);
+      <span class="function">spread</span>(f);
+    }
+  }
+}</code></pre></div>
+        <ul style="margin-left: 20px; color: var(--text-muted); line-height: 1.8;">
+          <li><strong>Auto-await:</strong> <code>await</code> is inserted in front of every game command, so commands block in order and a value like <code>field(f)</code> is ready to read — without changing the line count, so the running-line highlight stays exact.</li>
+          <li><strong>Freeze protection:</strong> every loop yields to the browser each iteration, and an endless loop that issues no commands is stopped with a clear error instead of locking the tab.</li>
+          <li><strong>Helpful errors:</strong> a typo such as <code>storage.Farm.whaet</code> throws with a "did you mean" suggestion instead of quietly reading <code>undefined</code>.</li>
+        </ul>
+      </div>
+
+      <div class="doc-section">
+        <h3 class="doc-title">🌾 3. Simulation: Fields, Weather & Production Chains</h3>
+        <ul style="margin-left: 20px; color: var(--text-muted); line-height: 1.8;">
+          <li><strong>Per-tile fields:</strong> every tile goes fallow → plowed → sown → growing → ready, and machines work it in real serpentine passes, changing tiles behind them as they drive.</li>
+          <li><strong>Soil channels:</strong> fertility, weeds, moisture and compaction are continuous values per tile. Weeds spread to neighbours, wheels compact the ground, and yield is earned from the soil instead of rolled at random.</li>
+          <li><strong>Weather with a true forecast:</strong> the forecast is generated in advance, so "can I harvest before the rain?" is a question a script can actually answer.</li>
+          <li><strong>Production chains:</strong> wheat → Mill → Bakery, barley → Malt House → Brewery, plus timber, steel, tools, fuel and fertilizer. Input quality flows through every recipe into the price.</li>
+          <li><strong>Towns grow on variety:</strong> a town wants a widening list of goods at a steady rate, and posts contracts with deadlines that a dispatcher script can accept.</li>
+          <li><strong>Road & rail network:</strong> vehicles route with A* over the roads and railways the player builds, and each loading dock serves one vehicle at a time, so busy sites form real queues.</li>
+        </ul>
+      </div>
+
+      <div class="doc-section">
+        <h3 class="doc-title">🗺️ 4. A Map Checked by Tools</h3>
+        <p class="doc-intro">The landscape is generated in Gaea, and the starting layout of roads, sites, fields and the railway is checked by Python tools before it reaches the game: nothing on a hill or in the river, every dock within reach of a road, and rail meeting road only at level crossings. The C# layout file is generated from that check, never edited by hand.</p>
+      </div>
+
+      <div style="margin-top: 25px;">
+        <button onclick="closeModal('modal6')" class="btn-secondary" style="cursor: pointer;">Close Window</button>
       </div>
     </div>
   </div>
